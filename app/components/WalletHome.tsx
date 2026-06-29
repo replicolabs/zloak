@@ -194,13 +194,11 @@ export default function WalletHome({ address, currency, onCurrencyChange, onDisc
 
   useEffect(() => { loadContacts(); }, [loadContacts]);
 
-  const signWithFreighter = async (xdr: string): Promise<string> => {
-    const { signTransaction } = await import("@stellar/freighter-api");
-    const result = await signTransaction(xdr, { networkPassphrase: "Test SDF Network ; September 2015" });
-    if (result.error) {
-      const msg = typeof result.error === "string" ? result.error : getErrorMessage(result.error);
-      throw new Error(msg || "Transaction signing was cancelled");
-    }
+  const signWithKit = async (xdr: string): Promise<string> => {
+    const { StellarWalletsKit } = await import("@/lib/walletKit");
+    const result = await StellarWalletsKit.signTransaction(xdr, {
+      networkPassphrase: "Test SDF Network ; September 2015",
+    });
     if (!result.signedTxXdr) throw new Error("Transaction signing was cancelled");
     return result.signedTxXdr;
   };
@@ -237,7 +235,7 @@ export default function WalletHome({ address, currency, onCurrencyChange, onDisc
         senderWallet: address,
         recipientAddress: params.recipientAddress,
         noteCount,
-        signTransaction: signWithFreighter,
+        signTransaction: signWithKit,
         onStep: (idx, label, status) => {
           if (label.includes("Generating ZK proof") && status === "pending") {
             setSendPhase("generating-proof");
