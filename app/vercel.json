@@ -1,0 +1,6 @@
+{
+  "functions": {
+    "api/prove/route.ts": { "maxDuration": 300 },
+    "api/pool/withdraw-tx/route.ts": { "maxDuration": 300 }
+  }
+}
