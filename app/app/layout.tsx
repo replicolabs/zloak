@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Zloak — Private Remittance",
+  title: "Zloak | Private Remittance",
   description: "Zero-knowledge private cross-border payments on Stellar",
 };
 
