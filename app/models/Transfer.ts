@@ -15,6 +15,7 @@ export interface ITransfer extends Document {
   withdrawTxHashes: string[];
   status: TransferStatus;
   errorMessage: string | null;
+  archived: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -32,6 +33,7 @@ const TransferSchema = new Schema<ITransfer>(
     withdrawTxHashes: { type: [String], default: [] },
     status: { type: String, enum: ["pending", "completed", "failed"], default: "pending" },
     errorMessage: { type: String, default: null },
+    archived: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

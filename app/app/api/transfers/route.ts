@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   const limit = Math.min(parseInt(req.nextUrl.searchParams.get("limit") ?? "20"), 50);
 
   await connectDB();
-  const transfers = await Transfer.find({ senderWallet: wallet })
+  const transfers = await Transfer.find({ senderWallet: wallet, archived: { $ne: true } })
     .sort({ createdAt: -1 })
     .limit(limit)
     .lean();
