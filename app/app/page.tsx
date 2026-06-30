@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Landing from "@/components/Landing";
 import ConnectGate from "@/components/ConnectGate";
@@ -12,16 +12,26 @@ import { Currency } from "@/components/ui/CurrencySelector";
 type AppScreen = "landing" | "gate" | "splash" | "wallet";
 
 const SLIDE: Record<AppScreen, number> = { landing: 0, gate: 1, splash: 2, wallet: 3 };
+const WALLET_KEY = "zloak_wallet";
 
 export default function Home() {
   const [screen, setScreen] = useState<AppScreen>("landing");
   const [address, setAddress] = useState<string>("");
   const [currency, setCurrency] = useState<Currency>("NGN");
 
+  useEffect(() => {
+    const saved = localStorage.getItem(WALLET_KEY);
+    if (saved) {
+      setAddress(saved);
+      setScreen("wallet");
+    }
+  }, []);
+
   const handleLaunch = useCallback(() => setScreen("gate"), []);
 
   const handleConnected = useCallback((addr: string) => {
     setAddress(addr);
+    localStorage.setItem(WALLET_KEY, addr);
     setScreen("splash");
   }, []);
 
@@ -29,7 +39,8 @@ export default function Home() {
 
   const handleDisconnect = useCallback(() => {
     setAddress("");
-    setScreen("gate");
+    localStorage.removeItem(WALLET_KEY);
+    setScreen("landing");
   }, []);
 
   const variants = {
@@ -71,7 +82,7 @@ export default function Home() {
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0"
           >
-            <ConnectGate onConnected={handleConnected} />
+            <ConnectGate onConnected={handleConnected} onBack={() => setScreen("landing")} />
           </motion.div>
         )}
 

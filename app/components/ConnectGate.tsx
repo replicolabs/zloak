@@ -1,15 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Wallet } from "lucide-react";
+import { Wallet, ArrowLeft } from "lucide-react";
 import Blobs from "@/components/ui/Blobs";
 import { initKit, StellarWalletsKit } from "@/lib/walletKit";
 
 interface ConnectGateProps {
   onConnected: (address: string) => void;
+  onBack: () => void;
 }
 
-export default function ConnectGate({ onConnected }: ConnectGateProps) {
+export default function ConnectGate({ onConnected, onBack }: ConnectGateProps) {
   const [connecting, setConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,6 +42,14 @@ export default function ConnectGate({ onConnected }: ConnectGateProps) {
       style={{ background: "var(--surface)" }}
     >
       <Blobs />
+
+      <button
+        onClick={onBack}
+        className="absolute top-5 left-5 flex items-center justify-center rounded-full touch"
+        style={{ width: 36, height: 36, background: "rgba(0,0,0,0.06)", color: "var(--ink-soft)", zIndex: 2 }}
+      >
+        <ArrowLeft size={16} />
+      </button>
 
       <motion.div
         initial={{ opacity: 0, y: 24, scale: 0.96 }}
